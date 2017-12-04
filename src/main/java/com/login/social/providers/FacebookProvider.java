@@ -26,9 +26,14 @@ public class FacebookProvider  {
 		if (connectionRepository.findPrimaryConnection(Facebook.class) == null) {
 			return REDIRECT_LOGIN;
 		}
+		//Populate the Bean
 		populateUserDetailsFromFacebook(userForm);
+		//Save the details in DB
+		baseProvider.saveUserDetails(userForm);
+		//Login the User
+		baseProvider.autoLoginUser(userForm);
 		model.addAttribute("loggedInUser",userForm);
-		return "user";
+		return "secure/user";
 	}
 
 	protected void populateUserDetailsFromFacebook(UserBean userForm) {

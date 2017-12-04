@@ -17,21 +17,27 @@ public class LinkedInProvider  {
 	private static final String REDIRECT_LOGIN = "redirect:/login";
 
   	@Autowired
-    	BaseProvider socialLoginBean ;
+    	BaseProvider baseProvider ;
 
 	public String getLinkedInUserData(Model model, UserBean userForm) {
 
-		ConnectionRepository connectionRepository = socialLoginBean.getConnectionRepository();
+		ConnectionRepository connectionRepository = baseProvider.getConnectionRepository();
 		if (connectionRepository.findPrimaryConnection(LinkedIn.class) == null) {
 			return REDIRECT_LOGIN;
 		}
 		populateUserDetailsFromLinkedIn(userForm);
+		//Save the details in DB
+		baseProvider.saveUserDetails(userForm);
+		
+		//Login the User
+		baseProvider.autoLoginUser(userForm);
+			
 		model.addAttribute("loggedInUser",userForm);
-		return "user";
+		return "secure/user";
 	}
 	
 	private void populateUserDetailsFromLinkedIn(UserBean userForm) {
-		LinkedIn linkedIn = socialLoginBean.getLinkedIn();
+		LinkedIn linkedIn = baseProvider.getLinkedIn();
 		LinkedInProfileFull linkedInUser = linkedIn.profileOperations().getUserProfileFull();
 		userForm.setEmail(linkedInUser.getEmailAddress());
 		userForm.setFirstName(linkedInUser.getFirstName());

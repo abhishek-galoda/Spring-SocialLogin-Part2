@@ -18,11 +18,21 @@
 
 
 	<div class="container">
-		<br /><br /><br />
+		<h1>Secure Page</h1>
+				<div th:fragment="logout" class="logout" sec:authorize="isAuthenticated()">
+			Logged in user: <b><span sec:authentication="name"></span></b> | Roles: <b><span sec:authentication="authorities"></span></b>
+				<form action="#" th:action="@{/logout}" method="post">
+			       <button type="submit"  class="btn btn-danger btn-sm">
+			       <span class="glyphicon glyphicon-log-out"></span>
+			        Log out</button>
+				</form>
+		</div>
+
+		<br/>
 		<form th:object="${loggedInUser}" method="post">
 			<div class="row">
-				<label for="username">Username:</label>
-				<span th:text="${loggedInUser.email}" />
+				<label for="email">Email :</label>
+				<span th:text="*{email}" />
 			</div>
 			<div class="row">
 				<label for="firstName">Name:</label>
