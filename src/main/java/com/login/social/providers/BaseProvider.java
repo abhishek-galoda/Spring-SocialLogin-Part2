@@ -44,8 +44,16 @@ public class BaseProvider {
 	if (StringUtils.isNotEmpty(userBean.getPassword())) {
 	    userBean.setPassword(bCryptPasswordEncoder.encode(userBean.getPassword()));
 	}
-	userRepository.save(userBean);
+	userRepository.saveWithoutPassword(userBean.getFirstName(), userBean.getLastName(), userBean.getCountry(), userBean.getImage(), userBean.getEmail());
 
+    }
+    
+    protected boolean isAllInformationAvailable(UserBean userBean) {
+	return StringUtils.isNotEmpty(userBean.getEmail()) &&
+	StringUtils.isNotEmpty(userBean.getFirstName()) &&
+	StringUtils.isNotEmpty(userBean.getLastName()) &&
+	StringUtils.isNotEmpty(userBean.getTitle()) &&
+	StringUtils.isNotEmpty(userBean.getCountry());
     }
 
     public void autoLoginUser(UserBean userBean) {
