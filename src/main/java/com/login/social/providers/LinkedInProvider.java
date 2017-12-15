@@ -19,25 +19,20 @@ public class LinkedInProvider  {
   	@Autowired
     	BaseProvider baseProvider ;
 
-	public String getLinkedInUserData(Model model, UserBean userBean) {
+	public String getLinkedInUserData(Model model, UserBean userForm) {
 
 		ConnectionRepository connectionRepository = baseProvider.getConnectionRepository();
 		if (connectionRepository.findPrimaryConnection(LinkedIn.class) == null) {
 			return REDIRECT_LOGIN;
 		}
-		populateUserDetailsFromLinkedIn(userBean);
-		//Check if all Info has been collected
-		if(!baseProvider.isAllInformationAvailable(userBean)) {
-		     model.addAttribute("userBean", userBean);
-		     return "incompleteInfo";
-		}
+		populateUserDetailsFromLinkedIn(userForm);
 		//Save the details in DB
-		baseProvider.saveUserDetails(userBean);
+		baseProvider.saveUserDetails(userForm);
 		
 		//Login the User
-		baseProvider.autoLoginUser(userBean);
+		baseProvider.autoLoginUser(userForm);
 			
-		model.addAttribute("loggedInUser",userBean);
+		model.addAttribute("loggedInUser",userForm);
 		return "secure/user";
 	}
 	

@@ -20,24 +20,19 @@ public class FacebookProvider  {
     	BaseProvider baseProvider ;
     	
 
-	public String getFacebookUserData(Model model, UserBean userBean) {
+	public String getFacebookUserData(Model model, UserBean userForm) {
 
 		ConnectionRepository connectionRepository = baseProvider.getConnectionRepository();
 		if (connectionRepository.findPrimaryConnection(Facebook.class) == null) {
 			return REDIRECT_LOGIN;
 		}
 		//Populate the Bean
-		populateUserDetailsFromFacebook(userBean);
-		//Check if all Info has been collected
-		if(!baseProvider.isAllInformationAvailable(userBean)) {
-		    model.addAttribute("userBean", userBean);
-		    return "incompleteInfo";
-		}
+		populateUserDetailsFromFacebook(userForm);
 		//Save the details in DB
-		baseProvider.saveUserDetails(userBean);
+		baseProvider.saveUserDetails(userForm);
 		//Login the User
-		baseProvider.autoLoginUser(userBean);
-		model.addAttribute("loggedInUser",userBean);
+		baseProvider.autoLoginUser(userForm);
+		model.addAttribute("loggedInUser",userForm);
 		return "secure/user";
 	}
 
